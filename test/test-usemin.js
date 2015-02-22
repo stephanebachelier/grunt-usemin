@@ -218,6 +218,32 @@ describe('usemin', function () {
 
   before(directory('temp'));
 
+  it.only('should not try to read directory', function () {
+    grunt.file.mkdir('scripts');
+    grunt.file.mkdir('scripts/dir.js');
+    grunt.file.write('scripts/dir.js/file.js', 'foo');
+    grunt.file.write('scripts/bar.js', 'bar');
+    grunt.log.muted = false;
+    grunt.config.init();
+    grunt.option('verbose', true);
+    grunt.option('debug', true);
+    grunt.config('usemin', {
+      html: ['build/index.html'],
+      js: ['scripts/{,*/}*.js'],
+      options: {
+        assetsDirs: ['scripts']
+      }
+    });
+
+    grunt.file.copy(path.join(__dirname, 'fixtures/source_with_directory_ending_with.js.html'), 'build/index.html');
+    grunt.task.run('usemin');
+    grunt.task.start();
+
+    // make test failed as implementation not completed
+    assert.ok();
+
+  });
+
   it('should work on CSS files', function () {
     grunt.file.mkdir('images');
     grunt.file.mkdir('images/misc');

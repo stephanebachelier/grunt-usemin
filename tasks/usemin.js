@@ -128,6 +128,7 @@ module.exports = function (grunt) {
     }, blockReplacements);
 
     this.files.forEach(function (fileObj) {
+      debug('looking at file source %s', fileObj.src);
       var files = grunt.file.expand({
         nonull: true,
         filter: 'isFile'
