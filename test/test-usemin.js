@@ -211,9 +211,7 @@ describe('usemin', function () {
       assert.ok(changed.match(/<img src="\.\.\/images\/test\.23012\.png">/));
       assert.ok(changed.match(/<img src="\.\.\/images\/misc\/test\.2a436\.png">/));
       assert.ok(changed.match(/<script src="scripts\/plugins\.12345\.js">/));
-
     });
-
   });
 
   before(directory('temp'));
@@ -355,7 +353,7 @@ describe('usemin', function () {
 
     var changed = grunt.file.read('index.html');
     // Check replace has performed its duty
-    assert.equal(changed, '<link rel="stylesheet" href="styles/main.css">');
+    assert.ok(changed.match('<link rel="stylesheet" href="styles/main.css">'));
   });
 });
 
@@ -406,7 +404,6 @@ describe('useminPrepare', function () {
     assert.equal(uglify.generated.files[0].dest, path.normalize('dist/scripts/foo.js'));
     assert.deepEqual(uglify.generated.files[0].src, [path.normalize('.tmp/concat/scripts/foo.js')]);
   });
-
 
   it('output config for subsequent tasks should be relative to observed file', function () {
     grunt.log.muted = true;
@@ -583,7 +580,6 @@ describe('useminPrepare', function () {
     assert.equal(files.dest, path.normalize('dist/scripts/plugins.js'));
 
   });
-
 
   it('should allow use to furnish new steps of the flow', function () {
     var copy = {
