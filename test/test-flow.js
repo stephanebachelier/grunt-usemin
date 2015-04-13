@@ -98,4 +98,39 @@ describe('ConfigWriter', function () {
     flow.setPost();
     assert.deepEqual(flow._post, {});
   });
+
+  it('should be able to merge steps', function () {
+    // default flow
+    var flow = new Flow({
+      steps: {
+        js: ['concat', 'uglify'],
+        css: ['concat', 'cssmin']
+      },
+      post: {}
+    });
+    // this might be called if someone define a flow without adding a `post` entry
+    flow.mergeSteps({
+      js: ['foo', 'bar']
+    });
+    assert.deepEqual(flow.steps('js'), ['foo', 'bar']);
+    assert.deepEqual(flow.steps('css'), ['concat', 'cssmin']);
+  });
+
+  it('should be able to merge steps', function () {
+    // default flow
+    var flow = new Flow({
+      steps: {
+        js: ['concat', 'uglify'],
+        css: ['concat', 'cssmin']
+      },
+      post: {}
+    });
+    // this might be called if someone define a flow without adding a `post` entry
+    flow.mergeSteps({
+      js: ['uglify']
+    });
+    assert.deepEqual(flow.steps('js'), ['uglify']);
+    assert.deepEqual(flow.steps('css'), ['concat', 'cssmin']);
+  });
+
 });
