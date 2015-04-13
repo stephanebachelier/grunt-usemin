@@ -366,4 +366,44 @@ describe('useminPrepare', function () {
     assert.equal(options.foo, 'bar');
 
   });
+
+  it('should allow to post configure cssmin generated steps', function () {
+    var cssminPostConfig = {
+      name: 'cssmin',
+      createConfig: function (context, block) {
+        console.log('createConfig');
+        var generated = context.options.generated;
+        generated.options = {
+          foo: 'bar'
+        };
+      }
+    };
+
+    grunt.log.muted = true;
+    grunt.config.init();
+    grunt.config('useminPrepare', {
+      html: 'index.html',
+      options: {
+        flow: {
+          html: {
+            steps: {
+              css: ['cssmin']
+            },
+            post: {
+              cssmin: [cssminPostConfig]
+            }
+          }
+        }
+      }
+    });
+
+    grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
+    grunt.file.copy(path.join(__dirname, 'fixtures/style.css'), 'styles/main.css');
+
+    grunt.task.run('useminPrepare');
+    grunt.task.start();
+
+    var cssmin = grunt.config('cssmin');
+    assert.equal(cssmin.generated.files.length, 1);
+  });
 });
