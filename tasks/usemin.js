@@ -110,15 +110,15 @@ module.exports = function (grunt) {
     });
     var blockReplacements = options.blockReplacements || {};
 
-    debug('Looking at %s target', this.target);
-
+    var type = options.type;
     var patterns = [];
-    var type = this.target;
+
+    debug('Looking at %s target', type);
 
     // Check if we have a user defined pattern
-    if (options.patterns && options.patterns[this.target]) {
-      debug('Adding user defined patterns for %s', this.target);
-      patterns = options.patterns[this.target];
+    if (options.patterns && options.patterns[type]) {
+      debug('Adding user defined patterns for %s', type);
+      patterns = options.patterns[type];
     }
 
     // var locator = options.revmap ? grunt.file.readJSON(options.revmap) : function (p) { return grunt.file.expand({filter: 'isFile'}, p); };

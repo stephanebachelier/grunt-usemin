@@ -353,4 +353,35 @@ describe('usemin', function () {
     // Check replace has performed its duty
     assert.ok(changed.match('<link rel="stylesheet" href="styles/main.css">'));
   });
+
+  it('should honor options.type', function () {
+    grunt.file.mkdir('build');
+    grunt.file.mkdir('build/images');
+    grunt.file.mkdir('build/images/misc');
+    grunt.file.write('build/images/test.23012.png', 'foo');
+    grunt.file.write('build/images/bar.23012.png', 'foo');
+    grunt.file.write('build/images/misc/test.2a436.png', 'foo');
+    grunt.file.copy(path.join(__dirname, 'fixtures/htmlprocessor_absolute.html'), 'build/index.html');
+
+    grunt.log.muted = true;
+    grunt.config.init();
+    grunt.config('usemin', {
+      foohtml: {
+        files: {
+          src: ['build/index.html']
+        },
+        options: {
+          type: 'html'
+        }
+      }
+    });
+    grunt.task.run('usemin');
+    grunt.task.start();
+
+    var changed = grunt.file.read('build/index.html');
+
+    assert.ok(changed.match(/<img src="\/images\/test\.23012\.png">/));
+    assert.ok(changed.match(/<img src="\/\/images\/bar\.23012\.png">/));
+    assert.ok(changed.match(/<img src="\/images\/misc\/test\.2a436\.png">/));
+  });
 });
