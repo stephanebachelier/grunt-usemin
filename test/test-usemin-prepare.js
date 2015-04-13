@@ -225,8 +225,7 @@ describe('useminPrepare', function () {
         flow: {
           steps: {
             js: ['uglify']
-          },
-          post: {}
+          }
         }
       }
     });
@@ -257,8 +256,7 @@ describe('useminPrepare', function () {
           html: {
             steps: {
               js: ['uglify']
-            },
-            post: {}
+            }
           }
         }
       }
@@ -302,8 +300,7 @@ describe('useminPrepare', function () {
         flow: {
           steps: {
             js: [copy]
-          },
-          post: {}
+          }
         }
       }
     });

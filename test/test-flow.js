@@ -85,4 +85,17 @@ describe('ConfigWriter', function () {
     assert.deepEqual(flow.post('js'), ['foo', 'bar']);
   });
 
+  it('should default to empty post', function () {
+    // default flow
+    var flow = new Flow({
+      steps: {
+        js: ['concat', 'uglify'],
+        css: ['concat', 'cssmin']
+      },
+      post: {}
+    });
+    // this might be called if someone define a flow without adding a `post` entry
+    flow.setPost();
+    assert.deepEqual(flow._post, {});
+  });
 });
