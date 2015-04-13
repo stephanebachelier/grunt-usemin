@@ -2,6 +2,7 @@
 var assert = require('assert');
 var uglifyConfig = require('../lib/config/uglify.js');
 var path = require('path');
+var helpers = require('./helpers');
 
 var block = {
   type: 'js',
@@ -25,19 +26,13 @@ describe('Uglify config write', function () {
     assert.equal(uglifyConfig.name, 'uglify');
   });
 
-  function resolveInFile(fname) {
-    // jshint -W040
-    return path.join(this.inDir, fname);
-    // jshint +W040
-  }
-
   it('should use the input files correctly', function () {
     var ctx = {
       inDir: 'zzz',
       inFiles: ['foo.js', 'bar.js', 'baz.js'],
       outDir: 'tmp/uglify',
       outFiles: [],
-      resolveInFile: resolveInFile
+      resolveInFile: helpers.mockBlockResolveInFile
     };
     var cfg = uglifyConfig.createConfig(ctx, block);
 
@@ -72,7 +67,7 @@ describe('Uglify config write', function () {
       outDir: 'dist',
       outFiles: [],
       last: true,
-      resolveInFile: resolveInFile
+      resolveInFile: helpers.mockBlockResolveInFile
     };
     var cfg = uglifyConfig.createConfig(ctx, block);
 

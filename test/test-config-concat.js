@@ -2,6 +2,7 @@
 var assert = require('assert');
 var concatConfig = require('../lib/config/concat.js');
 var path = require('path');
+var helpers = require('./helpers');
 
 var block = {
   type: 'js',
@@ -25,19 +26,13 @@ describe('Concat config write', function () {
     assert.equal(concatConfig.name, 'concat');
   });
 
-  function resolveInFile(fname) {
-    // jshint -W040
-    return path.join(this.inDir, fname);
-    // jshint +W040
-  }
-
   it('should use the input files correctly', function () {
     var ctx = {
       inDir: '.',
       inFiles: ['foo.js', 'bar.js', 'baz.js'],
       outDir: 'tmp/concat',
       outFiles: [],
-      resolveInFile: resolveInFile
+      resolveInFile: helpers.mockBlockResolveInFile
     };
     var cfg = concatConfig.createConfig(ctx, block);
 

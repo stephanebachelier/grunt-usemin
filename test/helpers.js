@@ -141,6 +141,13 @@ helpers.normalize = function (object) {
   return object;
 };
 
+// mock block resolveInFile function
+helpers.mockBlockResolveInFile = function (fname) {
+  // jshint -W040
+  return path.join(this.inDir, fname);
+  // jshint +W040
+};
+
 var warn = grunt.fail.warn;
 
 // mock grunt.fail.warn to avoid breaking test
