@@ -366,4 +366,67 @@ describe('useminPrepare', function () {
     assert.equal(options.foo, 'bar');
 
   });
+
+  describe('multiple target support', function () {
+    before(helpers.directory('temp'));
+
+    it('should honor type option', function () {
+      grunt.log.muted = true;
+      grunt.config.init();
+      grunt.config('useminPrepare', {
+        foohtml: {
+          files: {
+            src: ['index.html']
+          },
+          options: {
+            type: 'html'
+          }
+        }
+      });
+
+      grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
+      grunt.file.copy(path.join(__dirname, 'fixtures/style.css'), 'styles/main.css');
+      grunt.file.mkdir('scripts');
+      grunt.file.write('scripts/bar.js', 'bar');
+      grunt.file.write('scripts/baz.js', 'baz');
+      grunt.file.mkdir('scripts/vendor');
+      grunt.file.mkdir('scripts/vendor/bootstrap');
+      grunt.file.write('scripts/vendor/bootstrap/bootstrap-affix.js', 'bootstrap-affix');
+      grunt.file.write('scripts/vendor/bootstrap/bootstrap-alert.js', 'bootstrap-alert');
+
+      grunt.task.run('useminPrepare');
+      grunt.task.start();
+
+      // we only test that default flow has been applied
+      var concat = grunt.config('concat');
+      assert.equal(concat.generated.files.length, 2);
+
+      var uglify = grunt.config('uglify');
+      assert.equal(uglify.generated.files.length, 1);
+
+      var cssmin = grunt.config('cssmin');
+      assert.equal(cssmin.generated.files.length, 1);
+    });
+
+    it('should not warn if no type option provided and target not known', function () {
+      grunt.log.muted = true;
+      grunt.config.init();
+      grunt.config('useminPrepare', {
+        foohtml: 'index.html'
+      });
+
+      grunt.task.run('useminPrepare');
+      grunt.task.start();
+
+      // we only test that default flow has been applied
+      var concat = grunt.config('concat');
+      assert.equal(concat.generated.files.length, 2);
+
+      var uglify = grunt.config('uglify');
+      assert.equal(uglify.generated.files.length, 1);
+
+      var cssmin = grunt.config('cssmin');
+      assert.equal(cssmin.generated.files.length, 1);
+    });
+  });
 });

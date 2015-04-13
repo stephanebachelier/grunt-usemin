@@ -158,11 +158,14 @@ module.exports = function (grunt) {
   });
 
   grunt.registerMultiTask('useminPrepare', 'Using HTML markup as the primary source of information', function () {
-    var options = this.options();
+    var options = this.options({
+      type: this.target
+    });
     // collect files
     var dest = options.dest || 'dist';
     var staging = options.staging || '.tmp';
     var root = options.root;
+    var type = options.type;
 
     if (!this.filesSrc.length) {
       grunt.fail.warn('No source file found.');
