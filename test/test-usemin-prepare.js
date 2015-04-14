@@ -235,14 +235,19 @@ describe('useminPrepare', function () {
 
     var uglify = grunt.config('uglify');
     var concat = grunt.config('concat');
+    var cssmin = grunt.config('cssmin');
 
-    assert.equal(concat, null);
+    assert.ok(concat);
+    assert.equal(concat.generated.files.length, 1);
+    assert.equal(concat.generated.files[0].dest, path.normalize('.tmp/concat/styles/main.min.css'));
+
     assert.ok(uglify);
-
     assert.equal(uglify.generated.files.length, 1);
-    var files = uglify.generated.files[0];
+    assert.equal(uglify.generated.files[0].dest, path.normalize('dist/scripts/plugins.js'));
 
-    assert.equal(files.dest, path.normalize('dist/scripts/plugins.js'));
+    assert.ok(cssmin);
+    assert.equal(cssmin.generated.files.length, 1);
+    assert.equal(cssmin.generated.files[0].dest, path.normalize('dist/styles/main.min.css'));
 
   });
 
@@ -267,13 +272,53 @@ describe('useminPrepare', function () {
 
     var uglify = grunt.config('uglify');
     var concat = grunt.config('concat');
+    var cssmin = grunt.config('cssmin');
 
-    assert.equal(concat, null);
+    assert.ok(concat);
+    assert.equal(concat.generated.files.length, 1);
+    assert.equal(concat.generated.files[0].dest, path.normalize('.tmp/concat/styles/main.min.css'));
+
     assert.ok(uglify);
     assert.equal(uglify.generated.files.length, 1);
-    var files = uglify.generated.files[0];
-    assert.equal(files.dest, path.normalize('dist/scripts/plugins.js'));
+    assert.equal(uglify.generated.files[0].dest, path.normalize('dist/scripts/plugins.js'));
 
+    assert.ok(cssmin);
+    assert.equal(cssmin.generated.files.length, 1);
+    assert.equal(cssmin.generated.files[0].dest, path.normalize('dist/styles/main.min.css'));
+
+  });
+
+  it('should allow to suppress a step', function () {
+    grunt.log.muted = true;
+    grunt.config.init();
+    grunt.config('useminPrepare', {
+      html: 'index.html',
+      options: {
+        flow: {
+          html: {
+            steps: {
+              js: ['uglify'],
+              css: []
+            }
+          }
+        }
+      }
+    });
+    grunt.file.copy(path.join(__dirname, 'fixtures/usemin.html'), 'index.html');
+    grunt.task.run('useminPrepare');
+    grunt.task.start();
+
+    var uglify = grunt.config('uglify');
+    var concat = grunt.config('concat');
+    var cssmin = grunt.config('cssmin');
+
+    assert.equal(concat, null);
+
+    assert.ok(uglify);
+    assert.equal(uglify.generated.files.length, 1);
+    assert.equal(uglify.generated.files[0].dest, path.normalize('dist/scripts/plugins.js'));
+
+    assert.equal(cssmin, null);
   });
 
   it('should allow use to furnish new steps of the flow', function () {

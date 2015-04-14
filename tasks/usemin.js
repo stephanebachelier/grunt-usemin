@@ -15,14 +15,11 @@ var getFlowFromConfig = function (config, target) {
     },
     post: {}
   });
+
   if (config.options && config.options.flow) {
-    if (config.options.flow[target]) {
-      flow.setSteps(config.options.flow[target].steps);
-      flow.setPost(config.options.flow[target].post);
-    } else {
-      flow.setSteps(config.options.flow.steps);
-      flow.setPost(config.options.flow.post);
-    }
+    var flowConfig = config.options.flow[target] ? config.options.flow[target] : config.options.flow;
+    flow.mergeSteps(flowConfig.steps);
+    flow.setPost(flowConfig.post);
   }
   return flow;
 };
