@@ -134,3 +134,78 @@ describe('ConfigWriter', function () {
   });
 
 });
+
+describe('Flow builder from configuration', function () {
+  describe('global flow', function () {
+    it('should enable removing a step for a type', function () {
+      var flow = Flow.getFlowFromConfig({
+        html: 'index.html',
+        options: {
+          flow: {
+            steps: {
+              js: ['uglify']
+            }
+          }
+        }
+      });
+
+      assert.deepEqual(flow.steps('js'), ['uglify']);
+      assert.deepEqual(flow.steps('css'), Flow.defaultConfig.steps.css);
+    });
+
+    it('should enable clearing all steps for a type', function () {
+      var flow = Flow.getFlowFromConfig({
+        html: 'index.html',
+        options: {
+          flow: {
+            steps: {
+              css: []
+            }
+          }
+        }
+      });
+
+      assert.deepEqual(flow.steps('js'), Flow.defaultConfig.steps.js);
+      assert.deepEqual(flow.steps('css'), []);
+    });
+  });
+
+  describe('flow per target', function () {
+    it('should enable removing a step for a type', function () {
+      var flow = Flow.getFlowFromConfig({
+        html: 'index.html',
+        options: {
+          flow: {
+            html: {
+              steps: {
+                js: ['uglify']
+              }
+            }
+          }
+        }
+      }, 'html');
+
+      assert.deepEqual(flow.steps('js'), ['uglify']);
+      assert.deepEqual(flow.steps('css'), Flow.defaultConfig.steps.css);
+    });
+
+    it('should enable clearing all steps for a type', function () {
+      var flow = Flow.getFlowFromConfig({
+        html: 'index.html',
+        options: {
+          flow: {
+            html: {
+              steps: {
+                js: ['uglify'],
+                css: []
+              }
+            }
+          }
+        }
+      }, 'html');
+
+      assert.deepEqual(flow.steps('js'), ['uglify']);
+      assert.deepEqual(flow.steps('css'), []);
+    });
+  });
+});

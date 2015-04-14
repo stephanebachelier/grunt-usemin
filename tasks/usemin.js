@@ -2,27 +2,7 @@
 var util = require('util');
 var chalk = require('chalk');
 
-// Retrieve the flow config from the furnished configuration. It can be:
-//  - a dedicated one for the furnished target
-//  - a general one
-//  - the default one
-var getFlowFromConfig = function (config, target) {
-  var Flow = require('../lib/flow');
-  var flow = new Flow({
-    steps: {
-      js: ['concat', 'uglify'],
-      css: ['concat', 'cssmin']
-    },
-    post: {}
-  });
-
-  if (config.options && config.options.flow) {
-    var flowConfig = config.options.flow[target] ? config.options.flow[target] : config.options.flow;
-    flow.mergeSteps(flowConfig.steps);
-    flow.setPost(flowConfig.post);
-  }
-  return flow;
-};
+var Flow = require('../lib/flow');
 
 //
 // Return which locator to use to get the revisioned version (revved) of the files, with, by order of
@@ -169,7 +149,7 @@ module.exports = function (grunt) {
       .writeln('Going through ' + grunt.log.wordlist(this.filesSrc) + ' to update the config')
       .writeln('Looking for build script HTML comment blocks');
 
-    var flow = getFlowFromConfig(grunt.config('useminPrepare'), this.target);
+    var flow = Flow.getFlowFromConfig(grunt.config('useminPrepare'), this.target);
 
     var c = new ConfigWriter(flow, {
       root: root,
