@@ -208,4 +208,35 @@ describe('Flow builder from configuration', function () {
       assert.deepEqual(flow.steps('css'), []);
     });
   });
+
+  describe('Support multiple targets', function () {
+    it('should enable clearing all steps for a type', function () {
+      var config = {
+        foo: 'foo.html',
+        bar: 'bar.html',
+        options: {
+          flow: {
+            foo: {
+              steps: {}
+            },
+            bar: {
+              steps: {
+                js: ['concat'],
+                css: ['concat']
+              }
+            }
+          }
+        }
+      };
+
+      var fooFlow = Flow.getFlowFromConfig(config, 'foo');
+      var barFlow = Flow.getFlowFromConfig(config, 'bar');
+
+      assert.deepEqual(fooFlow.steps('js'), Flow.defaultConfig.steps.js);
+      assert.deepEqual(fooFlow.steps('css'), Flow.defaultConfig.steps.css);
+
+      assert.deepEqual(barFlow.steps('js'), ['concat']);
+      assert.deepEqual(barFlow.steps('css'), ['concat']);
+    });
+  });
 });
